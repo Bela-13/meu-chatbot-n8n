@@ -1,0 +1,178 @@
+{
+  "name": "My workflow 3",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=SISTEMA:Ignore todo o seu conhecimento prévio. Você é um robô de busca de texto.ESTRUTURA DE DADOS (PERGUNTA | RESPOSTA):{{ $('Get row(s) in sheet').all().map(i => \"P: \" + i.json[\"Perguntas \"] + \" | R: \" + i.json[\"Respostas \"]).join('\\n') }}TAREFA:Leia a \"PERGUNTA DO USUÁRIO\" abaixo.Localize na \"ESTRUTURA DE DADOS\" acima a pergunta idêntica ou mais parecida.Responda APENAS com o texto que vem depois do \"R:\".Se não houver uma resposta para a pergunta, responda: \"Informação não encontrada na base.\"PERGUNTA DO USUÁRIO:{{ $('mensagem').first().json.chatInput }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        48,
+        -192
+      ],
+      "id": "0a4cc5f5-4022-4314-8de5-40d85716de9d",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {
+          "temperature": 0
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        448,
+        -80
+      ],
+      "id": "1a3f3149-a2da-45ba-b360-4fe47b30cdd2",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "XO5dlnCVcIiWpaKz",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1ha0wh4xYROkJjdE_GOdXav6Vy6xZEg0aL7Bl3_E1gQU",
+          "mode": "list",
+          "cachedResultName": "Base de Conhecimento CS",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ha0wh4xYROkJjdE_GOdXav6Vy6xZEg0aL7Bl3_E1gQU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Página1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ha0wh4xYROkJjdE_GOdXav6Vy6xZEg0aL7Bl3_E1gQU/edit#gid=0"
+        },
+        "options": {
+          "returnFirstMatch": false
+        }
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        -48,
+        48
+      ],
+      "id": "a7a1dfb7-e471-4de8-9deb-56d9ee423b77",
+      "name": "Get row(s) in sheet in Google Sheets",
+      "notesInFlow": false,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "0kEHGO8B167EPWsQ",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1ha0wh4xYROkJjdE_GOdXav6Vy6xZEg0aL7Bl3_E1gQU",
+          "mode": "list",
+          "cachedResultName": "Base de Conhecimento CS",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ha0wh4xYROkJjdE_GOdXav6Vy6xZEg0aL7Bl3_E1gQU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Página1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ha0wh4xYROkJjdE_GOdXav6Vy6xZEg0aL7Bl3_E1gQU/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -176,
+        -192
+      ],
+      "id": "a1270970-2051-40a0-bdf9-b33786726add",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "0kEHGO8B167EPWsQ",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -384,
+        -192
+      ],
+      "id": "5cd19f3b-1340-4d1a-a6c4-0734f88605d9",
+      "name": "mensagem",
+      "webhookId": "b1423502-c12c-4bb7-94e9-cb24edf4664f"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet in Google Sheets": {
+      "ai_tool": [
+        []
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "mensagem": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "b796fc48-82a3-499a-a94e-13effe3031ba",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9b1de4ec4be883cdf9306a805a6b0843ae409b223c87c8a48fdbd314e38bdd22"
+  },
+  "id": "FwyVGxO9juXRQiHS",
+  "tags": []
+}
